@@ -229,6 +229,8 @@ LatexCmds.not = P(VanillaSymbol, function (_, super_) {
     '\\supset': 'notsupset',
     '\\supseteq': 'notsupseteq',
     '\\perp': 'nperp',
+    '\\Rightarrow': 'nrArr',
+    '\\Leftarrow': 'nlArr'
   };
   _.init = function () {
     return super_.init.call(this, '\\neg ', '&not;');
@@ -271,12 +273,12 @@ LatexCmds.verb = P(MathCommand, function(_, super_) {
     );
     }
 
-  _.latex = function(){ 
+  _.latex = function(){
     return '\\verb|'+this.textContents().trim()+'|';
   };
   _.text = function(){ return "'"+this.textContents()+"'" };
-  
-  _.parser = function() { 
+
+  _.parser = function() {
       var textBlock = this;
 
       // TODO: correctly parse text mode
@@ -296,24 +298,24 @@ LatexCmds.verb = P(MathCommand, function(_, super_) {
     _.createLeftOf = function(cursor) {
       var textBlock = this;
       super_.createLeftOf.call(this, cursor);
-    
+
       if (textBlock[R].siblingCreated) textBlock[R].siblingCreated(cursor.options, L);
       if (textBlock[L].siblingCreated) textBlock[L].siblingCreated(cursor.options, R);
       textBlock.bubble('reflow');
-    
+
       cursor.insAtRightEnd(textBlock);
-    
+
       if (textBlock.replacedText)
         for (var i = 0; i < textBlock.replacedText.length; i += 1)
           textBlock.write(cursor, textBlock.replacedText.charAt(i));
     };
-    
-    
+
+
   _.numBlocks = function() { return 1; };
 
   _.write = function(cursor, ch) {
     if(!ch.match(/\w/)) return;
-    
+
     cursor.show().deleteSelection();
 
     if (!cursor[L]) TextPiece(ch).createLeftOf(cursor);
@@ -420,7 +422,7 @@ LatexCmds.verb = P(MathCommand, function(_, super_) {
     super_.jQadd.call(this, jQ);
     if (this.ends[L]) this.ends[L].jQadd(this.jQ[0].firstChild);
   };
-  
+
   _.textContents = function() {
     return this.foldChildren('', function(text, child) {
       return text + child.text;

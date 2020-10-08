@@ -295,8 +295,10 @@ LatexCmds.to = bind(BinaryOperator,'\\to ','&rarr;');
 LatexCmds.rarr = LatexCmds.rightarrow = bind(VanillaSymbol,'\\rightarrow ','&rarr;');
 
 LatexCmds.implies = bind(BinaryOperator,'\\Rightarrow ','&rArr;');
+LatexCmds.nimplies = bind(BinaryOperator,'\\not\\Rightarrow ','&rArr;\u0338');
 
 LatexCmds.rArr = LatexCmds.Rightarrow = bind(VanillaSymbol,'\\Rightarrow ','&rArr;');
+LatexCmds.nrArr = LatexCmds.notRightarrow = bind(VanillaSymbol,'\\not\\Rightarrow ','&rArr;\u0338');
 
 LatexCmds.gets = bind(BinaryOperator,'\\gets ','&larr;');
 
@@ -305,6 +307,7 @@ LatexCmds.larr = LatexCmds.leftarrow = bind(VanillaSymbol,'\\leftarrow ','&larr;
 LatexCmds.impliedby = bind(BinaryOperator,'\\Leftarrow ','&lArr;');
 
 LatexCmds.lArr = LatexCmds.Leftarrow = bind(VanillaSymbol,'\\Leftarrow ','&lArr;');
+LatexCmds.nlArr = LatexCmds.notLeftarrow = bind(VanillaSymbol,'\\not\\Leftarrow ','&lArr;\u0338');
 
 LatexCmds.harr = LatexCmds.lrarr = LatexCmds.leftrightarrow =
   bind(VanillaSymbol,'\\leftrightarrow ','&harr;');
@@ -313,7 +316,7 @@ LatexCmds.iff = bind(BinaryOperator,'\\Leftrightarrow ','&hArr;');
 
 LatexCmds.hArr = LatexCmds.lrArr = LatexCmds.Leftrightarrow =
   bind(VanillaSymbol,'\\Leftrightarrow ','&hArr;');
- 
+
 LatexCmds.Re = LatexCmds.Real = LatexCmds.real = bind(VanillaSymbol,'\\Re ','&real;');
 
 LatexCmds.Im = LatexCmds.imag =
