@@ -293,6 +293,7 @@ LatexCmds.uArr = LatexCmds.Uparrow = bind(VanillaSymbol,'\\Uparrow ','&uArr;');
 LatexCmds.to = bind(BinaryOperator,'\\to ','&rarr;');
 
 LatexCmds.rarr = LatexCmds.rightarrow = bind(VanillaSymbol,'\\rightarrow ','&rarr;');
+LatexCmds.nrarr = LatexCmds.notrightarrow = bind(VanillaSymbol,'\\not\\rightarrow ','&rarr;\u0338');
 
 LatexCmds.implies = bind(BinaryOperator,'\\Rightarrow ','&rArr;');
 LatexCmds.nimplies = bind(BinaryOperator,'\\not\\Rightarrow ','&rArr;\u0338');
@@ -303,6 +304,7 @@ LatexCmds.nrArr = LatexCmds.notRightarrow = bind(VanillaSymbol,'\\not\\Rightarro
 LatexCmds.gets = bind(BinaryOperator,'\\gets ','&larr;');
 
 LatexCmds.larr = LatexCmds.leftarrow = bind(VanillaSymbol,'\\leftarrow ','&larr;');
+LatexCmds.nlarr = LatexCmds.notleftarrow = bind(VanillaSymbol,'\\not\\leftarrow ','&larr;\u0338');
 
 LatexCmds.impliedby = bind(BinaryOperator,'\\Leftarrow ','&lArr;');
 

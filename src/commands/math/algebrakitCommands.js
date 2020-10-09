@@ -230,7 +230,9 @@ LatexCmds.not = P(VanillaSymbol, function (_, super_) {
     '\\supseteq': 'notsupseteq',
     '\\perp': 'nperp',
     '\\Rightarrow': 'nrArr',
-    '\\Leftarrow': 'nlArr'
+    '\\rightarrow': 'nrarr',
+    '\\Leftarrow': 'nlArr',
+    '\\leftarrow': 'nlarr'
   };
   _.init = function () {
     return super_.init.call(this, '\\neg ', '&not;');
