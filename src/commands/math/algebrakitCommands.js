@@ -20,8 +20,11 @@ LatexCmds.lognl = P(MathCommand, function(_, super_) {
     +   '</span>'
     + '</span>'
   ;
+
   _.parser = function() {
-    return latexMathParser.optBlock.then(function(optBlock) {
+    return latexMathParser.optBlock
+    .then(function(optBlock) {
+      
       return latexMathParser.block.map(function(block) {
         var lognl = LogNL();
         lognl.blocks = [ optBlock, block ];
@@ -29,12 +32,13 @@ LatexCmds.lognl = P(MathCommand, function(_, super_) {
         block.adopt(lognl, optBlock, 0);
         return lognl;
       });
-    }).or(super_.parser.call(this));
+    })
+    .or(super_.parser.call(this));
   };
   _.textTemplate = ['lognl[', '](', ')'];
   _.latex = function() {
     if(MathQuill.latexSyntax=='STANDARD') {
-      return '\\ ^{'+this.ends[L].latex()+'}\\!\\log {'+this.ends[R].latex()+'}';
+      return '\\ ^{'+this.ends[L].latex()+'}\\!\\log\\left('+this.ends[R].latex()+'\\right)';
     } else {
       return '\\lognl['+this.ends[L].latex()+']{'+this.ends[R].latex()+'}';
     }
