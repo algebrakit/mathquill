@@ -471,11 +471,18 @@ var MathBlock = P(MathElement, function(_, super_) {
   _.chToCmd = function(ch, options) {
     var cons;
     // exclude f because it gets a dedicated command with more spacing
-    if (ch.match(/^[a-eg-zA-Z]$/))
-      return Letter(ch);
-    else if (/^\d$/.test(ch))
+    if (ch.match(/^[a-eg-zA-Z]$/)) {
+      if (ch === 'x' && options && options.typingXWritesTimesSymbol) {
+        return LatexCmds['×'](ch);
+      } else {
+        return Letter(ch);
+      }
+    } else if (/^\d$/.test(ch))
       return Digit(ch);
-    else if (options && options.typingSlashWritesDivisionSymbol && ch === '/')
+    else if (options && (
+      (options.typingSlashWritesDivisionSymbol && ch === '/') || 
+      (options.typingColonWritesDivisionSymbol && ch === ':')
+    ))
       return LatexCmds['÷'](ch);
     else if (options && options.typingAsteriskWritesTimesSymbol && ch === '*')
       return LatexCmds['×'](ch);
