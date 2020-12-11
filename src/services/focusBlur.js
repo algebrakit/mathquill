@@ -21,7 +21,7 @@ Controller.open(function(_) {
         cursor.clearSelection().endSelection();
         blur();
       });
-      $(window).bind('blur', windowBlur);
+      jQuery(window).bind('blur', windowBlur);
     });
     function windowBlur() { // blur event also fired on window, just switching
       clearTimeout(blurTimeout); // tabs/windows, not intentional blur
@@ -31,7 +31,7 @@ Controller.open(function(_) {
     function blur() { // not directly in the textarea blur handler so as to be
       cursor.hide().parent.blur(); // synchronous with/in the same frame as
       ctrlr.container.removeClass('mq-focused'); // clearing/blurring selection
-      $(window).unbind('blur', windowBlur);
+      jQuery(window).unbind('blur', windowBlur);
     }
     ctrlr.blurred = true;
     cursor.hide().parent.blur();

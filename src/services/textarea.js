@@ -5,16 +5,16 @@
 
 Controller.open(function(_) {
   Options.p.substituteTextarea = function() {
-    return $('<textarea autocapitalize=off autocomplete=off autocorrect=off ' +
+    return jQuery('<textarea autocapitalize=off autocomplete=off autocorrect=off ' +
                'spellcheck=false x-palm-disable-ste-all=true />')[0];
   };
   _.createTextarea = function() {
-    var textareaSpan = this.textareaSpan = $('<span class="mq-textarea"></span>'),
+    var textareaSpan = this.textareaSpan = jQuery('<span class="mq-textarea"></span>'),
       textarea = this.options.substituteTextarea();
     if (!textarea.nodeType) {
       throw 'substituteTextarea() must return a DOM element, got ' + textarea;
     }
-    textarea = this.textarea = $(textarea).appendTo(textareaSpan);
+    textarea = this.textarea = jQuery(textarea).appendTo(textareaSpan);
 
     var ctrlr = this;
     ctrlr.cursor.selectionChanged = function() { ctrlr.selectionChanged(); };

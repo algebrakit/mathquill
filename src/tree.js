@@ -31,7 +31,7 @@ function prayDirection(dir) {
  *     because `jQuery.fn.init` is idiosyncratic and Pjs doing, essentially,
  *     `jQuery.fn.init.apply(this, arguments)` isn't quite right, you need:
  *
- *       _.init = function(s, c) { jQuery.fn.init.call(this, s, c, $(document)); };
+ *       _.init = function(s, c) { jQuery.fn.init.call(this, s, c, jQuery(document)); };
  *
  *     if you actually give a shit (really, don't bother),
  *     see https://github.com/jquery/jquery/blob/1.7.2/src/core.js#L889
@@ -40,7 +40,7 @@ function prayDirection(dir) {
  *     `jQuery(document).find(selector)`, but Pjs doesn't (should it?) let
  *     you override the result of a constructor call
  *       + note that because of the jQuery(document) shortcut-ness, there's also
- *         the 3rd-argument-needs-to-be-`$(document)` thing above, but the fix
+ *         the 3rd-argument-needs-to-be-`jQuery(document)` thing above, but the fix
  *         for that (as can be seen above) is really easy. This problem requires
  *         a way more intrusive fix
  *
@@ -48,7 +48,7 @@ function prayDirection(dir) {
  * uses `this.constructor()` everywhere (hence calling `$`), but never ever does
  * `this.constructor.find` or anything like that, always doing `jQuery.find`.
  */
-var $ = P(jQuery, function(_) {
+var jQuery = P(jQuery, function(_) {
   _.insDirOf = function(dir, el) {
     return dir === L ?
       this.insertBefore(el.first()) : this.insertAfter(el.last());
@@ -99,11 +99,11 @@ var Node = P(function(_) {
 
   _.toString = function() { return '{{ MathQuill Node #'+this.id+' }}'; };
 
-  _.jQ = $();
+  _.jQ = jQuery();
   _.jQadd = function(jQ) { return this.jQ = this.jQ.add(jQ); };
   _.jQize = function(jQ) {
     // jQuery-ifies this.html() and links up the .jQ of all corresponding Nodes
-    var jQ = $(jQ || this.html());
+    var jQ = jQuery(jQ || this.html());
 
     function jQadd(el) {
       if (el.getAttribute) {
@@ -262,7 +262,7 @@ var Fragment = P(function(_) {
 
     this.jQ = this.jQ.add(accum);
   };
-  _.jQ = $();
+  _.jQ = jQuery();
 
   // like Cursor::withDirInsertAt(dir, parent, withDir, oppDir)
   _.withDirAdopt = function(dir, parent, withDir, oppDir) {

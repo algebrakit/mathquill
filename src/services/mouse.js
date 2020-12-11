@@ -8,7 +8,7 @@ Controller.open(function(_) {
     var ultimateRootjQ = this.root.jQ;
     //drag-to-select event handling
     this.container.bind('mousedown.mathquill', function(e) {
-      var rootjQ = $(e.target).closest('.mq-root-block');
+      var rootjQ = jQuery(e.target).closest('.mq-root-block');
       var root = Node.byId[rootjQ.attr(mqBlockId) || ultimateRootjQ.attr(mqBlockId)];
       var ctrlr = root.controller, cursor = ctrlr.cursor, blink = cursor.blink;
       var textareaSpan = ctrlr.textareaSpan, textarea = ctrlr.textarea;
@@ -20,7 +20,7 @@ Controller.open(function(_) {
       else cursor.options.ignoreNextMousedown = noop;
 
       var target;
-      function mousemove(e) { target = $(e.target); }
+      function mousemove(e) { target = jQuery(e.target); }
       function docmousemove(e) {
         if (!cursor.anticursor) cursor.startSelection();
         ctrlr.seek(target, e.pageX, e.pageY).cursor.select();
@@ -42,7 +42,7 @@ Controller.open(function(_) {
 
         // delete the mouse handlers now that we're not dragging anymore
         rootjQ.unbind('mousemove', mousemove);
-        $(e.target.ownerDocument).unbind('mousemove', docmousemove).unbind('mouseup', mouseup);
+        jQuery(e.target.ownerDocument).unbind('mousemove', docmousemove).unbind('mouseup', mouseup);
       }
 
       if (ctrlr.blurred) {
@@ -51,10 +51,10 @@ Controller.open(function(_) {
       }
 
       cursor.blink = noop;
-      ctrlr.seek($(e.target), e.pageX, e.pageY).cursor.startSelection();
+      ctrlr.seek(jQuery(e.target), e.pageX, e.pageY).cursor.startSelection();
 
       rootjQ.mousemove(mousemove);
-      $(e.target.ownerDocument).mousemove(docmousemove).mouseup(mouseup);
+      jQuery(e.target.ownerDocument).mousemove(docmousemove).mouseup(mouseup);
       // listen on document not just body to not only hear about mousemove and
       // mouseup on page outside field, but even outside page, except iframes: https://github.com/mathquill/mathquill/commit/8c50028afcffcace655d8ae2049f6e02482346c5#commitcomment-6175800
     });

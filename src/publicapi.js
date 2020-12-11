@@ -70,7 +70,7 @@ function getInterface(v) {
   function MQ(el) {
     if (!el || !el.nodeType) return null; // check that `el` is a HTML element, using the
       // same technique as jQuery: https://github.com/jquery/jquery/blob/679536ee4b7a92ae64a5f58d90e9cc38c001e807/src/core/init.js#L92
-    var blockId = $(el).children('.mq-root-block').attr(mqBlockId);
+    var blockId = jQuery(el).children('.mq-root-block').attr(mqBlockId);
     var ctrlr = blockId && Node.byId[blockId].controller;
     return ctrlr ? APIClasses[ctrlr.KIND_OF_MQ](ctrlr) : null;
   };
@@ -110,7 +110,7 @@ function getInterface(v) {
 
       var contents = el.addClass(classNames).contents().detach();
       root.jQ =
-        $('<span class="mq-root-block"/>').attr(mqBlockId, root.id).appendTo(el);
+        jQuery('<span class="mq-root-block"/>').attr(mqBlockId, root.id).appendTo(el);
       this.latex(contents.text());
 
       this.revert = function() {
@@ -220,11 +220,11 @@ function getInterface(v) {
       return this;
     };
     _.dropEmbedded = function(pageX, pageY, options) {
-      var clientX = pageX - $(window).scrollLeft();
-      var clientY = pageY - $(window).scrollTop();
+      var clientX = pageX - jQuery(window).scrollLeft();
+      var clientY = pageY - jQuery(window).scrollTop();
 
       var el = document.elementFromPoint(clientX, clientY);
-      this.__controller.seek($(el), pageX, pageY);
+      this.__controller.seek(jQuery(el), pageX, pageY);
       var cmd = Embed().setOptions(options);
       cmd.createLeftOf(this.__controller.cursor);
     };
@@ -233,7 +233,7 @@ function getInterface(v) {
 
       var ctrlr = this.__controller, root = ctrlr.root;
       if (!jQuery.contains(root.jQ[0], target)) target = root.jQ[0];
-      ctrlr.seek($(target), clientX + pageXOffset, clientY + pageYOffset);
+      ctrlr.seek(jQuery(target), clientX + pageXOffset, clientY + pageYOffset);
       if (ctrlr.blurred) this.focus();
       return this;
     };
@@ -255,7 +255,7 @@ function getInterface(v) {
     MQ[kind] = function(el, opts) {
       var mq = MQ(el);
       if (mq instanceof APIClass || !el || !el.nodeType) return mq;
-      var ctrlr = Controller(APIClass.RootBlock(), $(el), Options());
+      var ctrlr = Controller(APIClass.RootBlock(), jQuery(el), Options());
       ctrlr.KIND_OF_MQ = kind;
       return APIClass(ctrlr).__mathquillify(opts, v);
     };

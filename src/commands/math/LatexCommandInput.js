@@ -54,7 +54,7 @@ CharCmds['\\'] = P(MathCommand, function(_, super_) {
         this._replacedFragment.jQ.addClass('mq-blur').bind(
           'mousedown mousemove', //FIXME: is monkey-patching the mousedown and mousemove handlers the right way to do this?
           function(e) {
-            $(e.target = el).trigger(e);
+            jQuery(e.target = el).trigger(e);
             return false;
           }
         ).insertBefore(this.jQ).add(this.jQ);

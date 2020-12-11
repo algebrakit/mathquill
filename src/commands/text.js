@@ -206,7 +206,7 @@ var TextPiece = P(Node, function(_, super_) {
     super_.init.call(this);
     this.text = text;
   };
-  _.jQadd = function(dom) { this.dom = dom; this.jQ = $(dom); };
+  _.jQadd = function(dom) { this.dom = dom; this.jQ = jQuery(dom); };
   _.jQize = function() {
     return this.jQadd(document.createTextNode(this.text));
   };

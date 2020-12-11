@@ -15,7 +15,7 @@ var Cursor = P(Point, function(_) {
     this.parent = initParent;
     this.options = options;
 
-    var jQ = this.jQ = this._jQ = $('<span class="mq-cursor">&#8203;</span>');
+    var jQ = this.jQ = this._jQ = jQuery('<span class="mq-cursor">&#8203;</span>');
     //closured for setInterval
     this.blink = function(){ jQ.toggleClass('mq-blink'); };
 
@@ -45,7 +45,7 @@ var Cursor = P(Point, function(_) {
       clearInterval(this.intervalId);
     delete this.intervalId;
     this.jQ.detach();
-    this.jQ = $();
+    this.jQ = jQuery();
     return this;
   };
 
@@ -265,7 +265,7 @@ var Selection = P(Fragment, function(_, super_) {
   _.init = function() {
     super_.init.apply(this, arguments);
     this.jQ = this.jQ.wrapAll('<span class="mq-selection"></span>').parent();
-      //can't do wrapAll(this.jQ = $(...)) because wrapAll will clone it
+      //can't do wrapAll(this.jQ = jQuery(...)) because wrapAll will clone it
   };
   _.adopt = function() {
     this.jQ.replaceWith(this.jQ = this.jQ.children());
