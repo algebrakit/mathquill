@@ -7,12 +7,17 @@
   overflow: hidden;
   vertical-align: middle;
 }
+
+//!!!!!!!!!!!! NEVER apply styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
 .mq-math-mode {
-  font-variant: normal;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 115%;
-  line-height: 1;
+
+  &[mathquill-command-id] {
+    font-variant: normal;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 115%;
+    line-height: 1;
+  }
 
   .inline-block;
   .mq-non-leaf, .mq-scaled {
@@ -93,7 +98,7 @@
   }
 
   var, i, i.mq-font {
-    font-style: italic;
+    font-style: italic !important;
   }
 
   var.mq-f {
@@ -407,7 +412,7 @@
   }
 
 
-  &, .mq-editable-field {
+  &[mathquill-command-id], .mq-editable-field {
     cursor: text;
     font-family: @symbola;
   }
