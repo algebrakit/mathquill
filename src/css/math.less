@@ -11,7 +11,7 @@
 //!!!!!!!!!!!! NEVER apply styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
 .mq-math-mode {
 
-  &[mathquill-command-id] {
+  &[mathquill-command-id], [mathquill-command-id] {
     font-variant: normal;
     font-weight: normal;
     font-style: normal;
@@ -412,7 +412,7 @@
   }
 
 
-  &[mathquill-command-id], .mq-editable-field {
+  .mq-editable-field, [mathquill-command-id] {
     cursor: text;
     font-family: @symbola;
   }
