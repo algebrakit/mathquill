@@ -46,11 +46,11 @@ var Variable = P(Symbol, function(_, super_) {
 
 Options.p.autoCommands = { _maxLength: 0 };
 optionProcessors.autoCommands = function(cmds) {
-  if (!/^[a-z]+(?: [a-z]+)*$/i.test(cmds)) {
-    throw '"'+cmds+'" not a space-delimited list of only letters';
-  }
-  var list = cmds.split(' '), dict = {}, maxLength = 0;
-  for (var i = 0; i < list.length; i += 1) {
+  // this implementation of autocommnds is modified by algebrakit (mslob)
+  // input is now key-value map of (string to type) => (command to generate)
+  var maxLength = 0, dict = {};
+  var list = Object.keys(cmds);
+  for(var i=0; i<list.length; i++) {
     var cmd = list[i];
     if (cmd.length < 2) {
       throw 'autocommand "'+cmd+'" not minimum length of 2';
@@ -58,39 +58,38 @@ optionProcessors.autoCommands = function(cmds) {
     if (LatexCmds[cmd] === OperatorName) {
       throw '"' + cmd + '" is a built-in operator name';
     }
-    dict[cmd] = 1;
-    maxLength = max(maxLength, cmd.length);
+    if(cmd.length>maxLength) maxLength = cmd.length;
+    dict[cmd] = cmds[cmd];
   }
+
   dict._maxLength = maxLength;
   return dict;
 };
+
+// optionProcessors.autoCommands = function(cmds) {
+//   if (!/^[a-z]+(?: [a-z]+)*$/i.test(cmds)) {
+//     throw '"'+cmds+'" not a space-delimited list of only letters';
+//   }
+//   var list = cmds.split(' '), dict = {}, maxLength = 0;
+//   for (var i = 0; i < list.length; i += 1) {
+//     var cmd = list[i];
+//     if (cmd.length < 2) {
+//       throw 'autocommand "'+cmd+'" not minimum length of 2';
+//     }
+//     if (LatexCmds[cmd] === OperatorName) {
+//       throw '"' + cmd + '" is a built-in operator name';
+//     }
+//     dict[cmd] = 1;
+//     maxLength = max(maxLength, cmd.length);
+//   }
+//   dict._maxLength = maxLength;
+//   return dict;
+// };
 
 var Letter = P(Variable, function(_, super_) {
   _.init = function(ch) { return super_.init.call(this, this.letter = ch); };
   _.createLeftOf = function(cursor) {
     super_.createLeftOf.apply(this, arguments);
-    var autoCmds = cursor.options.autoCommands, maxLength = autoCmds._maxLength;
-    if (maxLength > 0 && !/[a-z]/i.test(this.letter)) { //algebrakit, mslob: trigger autocommand only after non-letter
-
-      // want longest possible autocommand, so join together longest
-      // sequence of letters
-      var str = '', l = this, i = 0;
-      // FIXME: l.ctrlSeq === l.letter checks if first or last in an operator name
-      while (l instanceof Letter && l.ctrlSeq === l.letter && i < maxLength) {
-        str = l.letter + str, l = l[L], i += 1;
-      }
-      str = str.substr(0, str.length-1); //mslob: remove the non-letter
-      // check for an autocommand, going thru substrings longest to shortest
-      while (str.length) {
-        if (autoCmds.hasOwnProperty(str)) {
-          for (var i = 1, l = this; i < str.length; i += 1, l = l[L]);
-          Fragment(l, this).remove();
-          cursor[L] = l[L];
-          return LatexCmds[str](str).createLeftOf(cursor);
-        }
-        str = str.slice(1);
-      }
-    }
   };
   _.italicize = function(bool) {
     this.isItalic = bool;

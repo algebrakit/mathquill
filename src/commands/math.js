@@ -437,10 +437,23 @@ var MathBlock = P(MathElement, function(_, super_) {
 
   _.keystroke = function(key, e, ctrlr) {
     if (ctrlr.options.spaceBehavesLikeTab
-        && (key === 'Spacebar' || key === 'Shift-Spacebar')) {
-      e.preventDefault();
-      ctrlr.escapeDir(key === 'Shift-Spacebar' ? L : R, key, e);
-      return;
+        && key === 'Spacebar') {
+      var cursor = ctrlr.cursor
+      if(cursor[L] && cursor[L].ctrlSeq && cursor[L].ctrlSeq=='\\ ' ) {
+        //double space: escape from block if possible
+        e.preventDefault();  //the 2nd space need not be shown
+
+        if (cursor.parent === ctrlr.root) {
+          //we are in the root block, nothing to escape from
+        } else {
+          for (l = cursor[L]; l&&l.ctrlSeq=='\\ '&&l[L]; l = l[L]);
+          if(l.ctrlSeq!='\\ ') l=l[R];
+          Fragment(l, cursor[L]).remove();
+          cursor[L]=l[L];
+          ctrlr.escapeDir(key === 'Shift-Spacebar' ? L : R, key, e);
+        }
+        return;
+      }
     }
     return super_.keystroke.apply(this, arguments);
   };
@@ -470,6 +483,7 @@ var MathBlock = P(MathElement, function(_, super_) {
   };
   _.chToCmd = function(ch, options) {
     var cons;
+
     // exclude f because it gets a dedicated command with more spacing
     if (ch.match(/^[a-eg-zA-Z]$/)) {
       if (ch === 'x' && options && options.typingXWritesTimesSymbol) {
@@ -492,9 +506,14 @@ var MathBlock = P(MathElement, function(_, super_) {
       return VanillaSymbol(ch);
   };
   _.write = function(cursor, ch) {
-    var cmd = this.chToCmd(ch, cursor.options);
-    if (cursor.selection) cmd.replaces(cursor.replaceSelection());
-    cmd.createLeftOf(cursor.show());
+    var cmd = this.handleAutoCommands(ch, cursor);
+    if(cmd && (ch==' ' || ch=='(') && cmd.numBlocks()>0) {
+      //no need to render the space or opening bracket
+    } else {
+      cmd = this.chToCmd(ch, cursor.options);
+      if (cursor.selection) cmd.replaces(cursor.replaceSelection());
+      cmd.createLeftOf(cursor.show());
+    }
   };
 
   _.focus = function() {
@@ -510,6 +529,26 @@ var MathBlock = P(MathElement, function(_, super_) {
 
     return this;
   };
+  _.handleAutoCommands = function(ch, cursor) {
+    var autoCmds = cursor.options.autoCommands, maxLength = autoCmds._maxLength;
+    if (maxLength > 0 && !/[a-z]/i.test(ch)) { //algebrakit, mslob: trigger autocommand only after non-letter
+
+      var str = '', l = cursor[L], i = 0;
+      while (l instanceof Letter && l.ctrlSeq === l.letter && i < maxLength) {
+        str = l.letter + str, l = l[L], i += 1;
+      }
+      // check for an autocommand, check only longest string of letters (so not api --> a\pi)
+      if (str.length>0 && autoCmds.hasOwnProperty(str)) {
+          for (var i = 1, l = cursor[L]; i < str.length; i += 1, l = l[L]);
+          Fragment(l, cursor[L]).remove();
+          cursor[L] = l[L];
+
+          var cmd = autoCmds[str];
+          LatexCmds[cmd](cmd).createLeftOf(cursor)
+          return LatexCmds[cmd](cmd);
+      }
+    }
+  }
 });
 
 API.StaticMath = function(APIClasses) {
