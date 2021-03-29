@@ -544,6 +544,7 @@ var MathBlock = P(MathElement, function(_, super_) {
           cursor[L] = l[L];
 
           var cmd = autoCmds[str];
+          if(cmd==1) cmd = str; //mslob: can be removed once old autocmds implementation is gone
           LatexCmds[cmd](cmd).createLeftOf(cursor)
           return LatexCmds[cmd](cmd);
       }

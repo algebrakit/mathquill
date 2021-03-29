@@ -46,6 +46,26 @@ var Variable = P(Symbol, function(_, super_) {
 
 Options.p.autoCommands = { _maxLength: 0 };
 optionProcessors.autoCommands = function(cmds) {
+  if(typeof(cmds)=='string') {
+    //mslob: this can be removed when old autocommands are removed from akit's code
+    if (!/^[a-z]+(?: [a-z]+)*$/i.test(cmds)) {
+      throw '"'+cmds+'" not a space-delimited list of only letters';
+    }
+    var list = cmds.split(' '), dict = {}, maxLength = 0;
+    for (var i = 0; i < list.length; i += 1) {
+      var cmd = list[i];
+      if (cmd.length < 2) {
+        throw 'autocommand "'+cmd+'" not minimum length of 2';
+      }
+      if (LatexCmds[cmd] === OperatorName) {
+        throw '"' + cmd + '" is a built-in operator name';
+      }
+      dict[cmd] = 1;
+      maxLength = max(maxLength, cmd.length);
+    }
+    dict._maxLength = maxLength;
+    return dict;
+  }
   // this implementation of autocommnds is modified by algebrakit (mslob)
   // input is now key-value map of (string to type) => (command to generate)
   var maxLength = 0, dict = {};
@@ -65,26 +85,6 @@ optionProcessors.autoCommands = function(cmds) {
   dict._maxLength = maxLength;
   return dict;
 };
-
-// optionProcessors.autoCommands = function(cmds) {
-//   if (!/^[a-z]+(?: [a-z]+)*$/i.test(cmds)) {
-//     throw '"'+cmds+'" not a space-delimited list of only letters';
-//   }
-//   var list = cmds.split(' '), dict = {}, maxLength = 0;
-//   for (var i = 0; i < list.length; i += 1) {
-//     var cmd = list[i];
-//     if (cmd.length < 2) {
-//       throw 'autocommand "'+cmd+'" not minimum length of 2';
-//     }
-//     if (LatexCmds[cmd] === OperatorName) {
-//       throw '"' + cmd + '" is a built-in operator name';
-//     }
-//     dict[cmd] = 1;
-//     maxLength = max(maxLength, cmd.length);
-//   }
-//   dict._maxLength = maxLength;
-//   return dict;
-// };
 
 var Letter = P(Variable, function(_, super_) {
   _.init = function(ch) { return super_.init.call(this, this.letter = ch); };
