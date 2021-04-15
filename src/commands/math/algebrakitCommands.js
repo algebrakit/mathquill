@@ -206,7 +206,7 @@ var Underset =
 
 var Overset =
   LatexCmds.overset = P(MathCommand, function(_, super_) {
-  _.ctrlSeq = '\\underset';
+  _.ctrlSeq = '\\overset';
   _.htmlTemplate =
       '<span class="mq-non-leaf">'
     +     '<span class="mq-array mq-non-leaf">'
