@@ -206,6 +206,9 @@ LatexCmds.leftharpoondown = bind(VanillaSymbol, '\\leftharpoondown ', '&#8637;')
 LatexCmds.rightharpoondown = bind(VanillaSymbol, '\\rightharpoondown ', '&#8641;');
 LatexCmds.rightleftharpoons = bind(VanillaSymbol, '\\rightleftharpoons ', '&#8652;');
 LatexCmds.nwarrow = bind(VanillaSymbol, '\\nwarrow ', '&#8598;');
+// sberkmortel add curve arrow Tracker#4792
+LatexCmds.curvearrowleft = bind(VanillaSymbol, '\\curvearrowleft', '&#8630;');
+LatexCmds.curvearrowright = bind(VanillaSymbol, '\\curvearrowright', '&#8631;');
 
 //Misc
 LatexCmds.ldots = bind(VanillaSymbol, '\\ldots ', '&#8230;');
