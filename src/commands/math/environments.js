@@ -256,6 +256,8 @@ Environments.matrix = P(Environment, function(_, super_) {
       this.relink();
     }
   };
+  // Deleting a cell will also delete the current row and
+  // column if they are empty, and relink the matrix.
   _.deleteCell = function(currentCell) {
     var rows = [], columns = [], myRow = [], myColumn = [];
     var blocks = this.blocks, row, column;
@@ -311,9 +313,86 @@ Environments.matrix = P(Environment, function(_, super_) {
     }
     this.finalizeTree();
   };
+  _.addRow = function(afterCell) {
+    var previous = [], newCells = [], next = [];
+    var newRow = jQuery('<tr></tr>'), row = afterCell.row;
+    var columns = 0, block, column;
+
+    this.eachChild(function (cell) {
+      // Cache previous rows
+      if (cell.row <= row) {
+        previous.push(cell);
+      }
+      // Work out how many columns
+      if (cell.row === row) {
+        if (cell === afterCell) column = columns;
+        columns+=1;
+      }
+      // Cache cells after new row
+      if (cell.row > row) {
+        cell.row+=1;
+        next.push(cell);
+      }
+    });
+
+    // Add new cells, one for each column
+    for (var i=0; i<columns; i+=1) {
+      block = MatrixCell(row+1);
+      block.parent = this;
+      newCells.push(block);
+
+      // Create cell <td>s and add to new row
+      block.jQ = jQuery('<td class="mq-empty">')
+        .attr(mqBlockId, block.id)
+        .appendTo(newRow);
+    }
+
+    // Insert the new row
+    this.jQ.find('tr').eq(row).after(newRow);
+    this.blocks = previous.concat(newCells, next);
+    return newCells[column];
+  };
+  _.addColumn = function(afterCell) {
+    var rows = [], newCells = [];
+    var column, block;
+
+    // Build rows array and find new column index
+    this.eachChild(function (cell) {
+      rows[cell.row] = rows[cell.row] || [];
+      rows[cell.row].push(cell);
+      if (cell === afterCell) column = rows[cell.row].length;
+    });
+
+    // Add new cells, one for each row
+    for (var i=0; i<rows.length; i+=1) {
+      block = MatrixCell(i);
+      block.parent = this;
+      newCells.push(block);
+      rows[i].splice(column, 0, block);
+
+      block.jQ = jQuery('<td class="mq-empty">')
+        .attr(mqBlockId, block.id);
+    }
+
+    // Add cell <td> elements in correct positions
+    this.jQ.find('tr').each(function (i) {
+      jQuery(this).find('td').eq(column-1).after(rows[i][column].jQ);
+    });
+
+    // Flatten the rows array-of-arrays
+    this.blocks = [].concat.apply([], rows);
+    return newCells[afterCell.row];
+  };
+  _.insert = function(method, afterCell) {
+    var cellToFocus = this[method](afterCell);
+    this.cursor = this.cursor || this.parent.cursor;
+    this.finalizeTree();
+    this.bubble('reflow').cursor.insAtRightEnd(cellToFocus);
+  };
   _.backspace = function(cell, dir, cursor, finalDeleteCallback) {
     var dirwards = cell[dir];
     if (cell.isEmpty()) {
+      this.deleteCell(cell);
       while (dirwards &&
         dirwards[dir] &&
         this.blocks.indexOf(dirwards) === -1) {
@@ -321,14 +400,11 @@ Environments.matrix = P(Environment, function(_, super_) {
       }
       if (dirwards) {
         cursor.insAtDirEnd(-dir, dirwards);
-      } else { // End of matrix, select entire structure for deletion
+      }
+      if (this.blocks.length === 1 && this.blocks[0].isEmpty()) {
         finalDeleteCallback();
         this.finalizeTree();
       }
-      // if (this.blocks.length === 1 && this.blocks[0].isEmpty()) {
-      //   finalDeleteCallback();
-      //   this.finalizeTree();
-      // }
       this.bubble('edited');
     }
   };
@@ -385,7 +461,7 @@ Environments.Vmatrix = P(Matrix, function(_, super_) {
 });
 
 // Replacement for mathblocks inside matrix cells
-// Adds matrix-specific deleteOutOf command
+// Adds matrix-specific keyboard commands
 var MatrixCell = P(MathBlock, function(_, super_) {
   _.init = function(row, parent, replaces) {
     super_.init.call(this);
@@ -399,6 +475,18 @@ var MatrixCell = P(MathBlock, function(_, super_) {
       }
     }
   };
+  _.keystroke = function(key, e, ctrlr) {
+    switch (key) {
+    case 'Shift-Spacebar':
+      e.preventDefault();
+      return this.parent.insert('addColumn', this);
+      break;
+    case 'Shift-Enter':
+    return this.parent.insert('addRow', this);
+      break;
+    }
+    return super_.keystroke.apply(this, arguments);
+  };
   _.deleteOutOf = function(dir, cursor) {
     var self = this, args = arguments;
     this.parent.backspace(this, dir, cursor, function () {
@@ -407,10 +495,7 @@ var MatrixCell = P(MathBlock, function(_, super_) {
     });
   };
   _.moveOutOf = function(dir, cursor, updown) {
-    // Wraparound of cells and only exit at matrix positions (1,1) and (n,n)
     var atExitPoint = updown && this.parent.atExitPoint(dir, cursor);
-    // Exit matrix at edges
-    // var atExitPoint = this.parent.atExitPoint(dir, cursor); //  
     // Step out of the matrix if we've moved past an edge column
     if (!atExitPoint && this[dir]) cursor.insAtDirEnd(-dir, this[dir]);
     else cursor.insDirOf(dir, this.parent);
