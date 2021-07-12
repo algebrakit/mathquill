@@ -442,9 +442,9 @@ var MathBlock = P(MathElement, function(_, super_) {
       if(cursor[L] && cursor[L].ctrlSeq && cursor[L].ctrlSeq=='\\ ' ) {
         //double space: escape from block if possible, otherwise interpret as moveOutOfRight
         e.preventDefault();  //the 2nd space must not be shown
-          this.moveOutOf(1, cursor);
         if (cursor.parent === ctrlr.root) {
           //we are in the root block, nothing to escape from
+          this.moveOutOf(1, cursor);
         } else {
           for (l = cursor[L]; l&&l.ctrlSeq=='\\ '&&l[L]; l = l[L]);
           if(l.ctrlSeq!='\\ ') l=l[R];

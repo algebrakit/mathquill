@@ -147,7 +147,11 @@ var saneKeyboardEvents = (function() {
     }
 
     function handleKey() {
-      handlers.keystroke(stringify(keydown), keydown);
+      if (handlers.options && handlers.options.overrideKeystroke) {
+        handlers.options.overrideKeystroke(stringify(keydown), keydown);
+      } else {
+        handlers.keystroke(stringify(keydown), keydown);
+      }
     }
 
     // -*- event handlers -*- //
@@ -204,7 +208,11 @@ var saneKeyboardEvents = (function() {
       var text = textarea.val();
       if (text.length === 1) {
         textarea.val('');
-        handlers.typedText(text);
+        if (handlers.options && handlers.options.overrideTypedText) {
+          handlers.options.overrideTypedText(text);
+        } else {
+          handlers.typedText(text);
+        }
       } // in Firefox, keys that don't type text, just clear seln, fire keypress
       // https://github.com/mathquill/mathquill/issues/293#issuecomment-40997668
       else if (text && textarea[0].select) textarea[0].select(); // re-select if that's why we're here
