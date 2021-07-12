@@ -965,7 +965,7 @@ LatexCmds.editable = // backcompat with before cfd3620 on #233
   LatexCmds.MathQuillMathField = P(MathCommand, function (_, super_) {
     _.ctrlSeq = '\\MathQuillMathField';
     _.htmlTemplate =
-      '<span class="mq-editable-field">'
+      '<span class="akit-editable-field">'
       + '<span class="mq-root-block">&0</span>'
       + '</span>'
       ;
