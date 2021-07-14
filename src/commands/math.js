@@ -440,11 +440,11 @@ var MathBlock = P(MathElement, function(_, super_) {
         && key === 'Spacebar') {
       var cursor = ctrlr.cursor
       if(cursor[L] && cursor[L].ctrlSeq && cursor[L].ctrlSeq=='\\ ' ) {
-        //double space: escape from block if possible
-        e.preventDefault();  //the 2nd space need not be shown
-
+        //double space: escape from block if possible, otherwise interpret as moveOutOfRight
+        e.preventDefault();  //the 2nd space must not be shown
         if (cursor.parent === ctrlr.root) {
           //we are in the root block, nothing to escape from
+          this.moveOutOf(1, cursor);
         } else {
           for (l = cursor[L]; l&&l.ctrlSeq=='\\ '&&l[L]; l = l[L]);
           if(l.ctrlSeq!='\\ ') l=l[R];

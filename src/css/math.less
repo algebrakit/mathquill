@@ -8,7 +8,7 @@
   vertical-align: middle;
 }
 
-//!!!!!!!!!!!! NEVER apply styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
+//!!!!!!!!!!!! Be careful when applying styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
 .mq-math-mode {
 
   font-size: 115%;
@@ -20,6 +20,10 @@
     line-height: 1;
   }
 
+  .akit-editable-field {
+    //akit: for issue #5139
+    display: none;
+  }
   .inline-block;
   .mq-non-leaf, .mq-scaled {
     .inline-block;
@@ -99,7 +103,7 @@
   }
 
   var, i, i.mq-font {
-    font-style: italic !important;
+    font-style: italic;
   }
 
   var.mq-f {
