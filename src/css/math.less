@@ -8,14 +8,15 @@
   vertical-align: middle;
 }
 
-//!!!!!!!!!!!! NEVER apply styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
+//!!!!!!!!!!!! Be careful when applying styles to just .mq-math-mode: these styles can bleed into inline interactions that are embedded within a formula
 .mq-math-mode {
 
+  font-size: 115%;
+  
   &[mathquill-command-id], [mathquill-command-id] {
     font-variant: normal;
     font-weight: normal;
-    // font-style: normal;
-    font-size: 115%;
+    font-style: normal;
     line-height: 1;
   }
 
