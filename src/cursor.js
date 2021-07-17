@@ -73,7 +73,7 @@ var Cursor = P(Point, function(_) {
     prayDirection(dir);
     this.jQ.insAtDirEnd(dir, el.jQ);
     this.withDirInsertAt(dir, el, 0, el.ends[dir]);
-    el.focus();
+    if(el.focus) el.focus();
     return this;
   };
   _.insAtLeftEnd = function(el) { return this.insAtDirEnd(L, el); };

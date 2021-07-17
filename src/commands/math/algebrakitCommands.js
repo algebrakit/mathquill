@@ -321,7 +321,12 @@ LatexCmds.verb = P(MathCommand, function(_, super_) {
 
 
   _.numBlocks = function() { return 1; };
-
+  _.createBlocks = function() {
+      var newBlock = TextPiece(' ');
+      this.blocks = [newBlock];
+      newBlock.adopt(this, 0, 0);
+    }
+ 
   _.write = function(cursor, ch) {
     if(!ch.match(/\w/)) return;
 
@@ -433,6 +438,7 @@ LatexCmds.verb = P(MathCommand, function(_, super_) {
   };
 
   _.textContents = function() {
+    //the child is a TextField
     return this.foldChildren('', function(text, child) {
       return text + child.text;
     });
